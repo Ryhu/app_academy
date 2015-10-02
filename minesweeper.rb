@@ -1,10 +1,22 @@
+
+
+
+
 class Minesweeper
+  def initialize()
+
+  end
+
+  def reveal
+
+  end
+
+  def flag_bomb
+
+  end
 
 end
 
-class GameCode
-
-end
 
 CONSTANTS = [[-1 , -1] , [-1 , 0] , [-1 , 1],
              [0 , -1]             , [0 , 1],
@@ -29,15 +41,6 @@ class Tile
   def revealed
     @revealed
   end
-
-  def neighbors(pos)
-      #add values to pos to give all neighbors
-      in_bounds?
-  end
-
-  def neighbor_bomb_count
-  end
-
 
 end
 
@@ -96,9 +99,13 @@ class Board
     @board.each_with_index do | row, idx1 |
       row.each_with_index do | col, idx2 |
         if @board[idx1][idx2].revealed
+          if @board[idx1][idx2].value == 0
+            print '_'
+          else
           print @board[idx1][idx2].value
+          end
         else
-          print '?'
+          print '*'
         end
         print ' '
       end
