@@ -10,18 +10,31 @@ class Minesweeper
 
   def reveal(pos)
     @board[pos[0]][pos[1]].revealed = true
+    p "aiwuhfklsudfh"
     @board.render
     if @board[pos[0]][pos[1]].value == 9
       game_over
     else
       @win_count += 1
-      if win_check
-        return "YOU WINNNNNN"
-      else
-      prompt_user
+      if @board[pos[0]][pos[1]].value == 0
+        zero_propegate(pos)
+        if win_check
+          return "YOU WINNNNNN"
+        else
+          prompt_user
+        end
       end
     end
+  end
 
+  def zero_propegate(pos)
+    CONSTANTS.each do |el|
+      if in_bounds?([el[0] + pos[0] , el[1] + pos[1]])
+        unless @board[el[0] + pos[0]][el[1] + pos[1]].reveal
+          reveal(@board[el[0] + pos[0]][el[1] + pos[1]].position)
+        end
+      end
+    end
   end
 
   def wincheck
@@ -59,6 +72,7 @@ class Minesweeper
     else
       prompt_user
       "learnt o type muffa"
+    end
   end
 
 end
@@ -69,7 +83,7 @@ CONSTANTS = [[-1 , -1] , [-1 , 0] , [-1 , 1],
              [1 , -1] ,  [1 , 0]  , [1 , 1]]
 
 class Tile
-  attr_accessor :value
+  attr_accessor :value, :position
 
   def initialize(pos, board)
     @bombed = false
@@ -98,9 +112,9 @@ class Board
     @boardX = boardX
     @boardY = boardY
     @bombs = bombs
-    @board = board_maker
+    @board = []
+    board_maker
     put_numbers
-
   end
 
   def board_maker
@@ -111,7 +125,11 @@ class Board
       end
     end
       making_board.flatten.sample(@bombs).each{|tile| tile.value = 9}
-      making_board
+      @board = making_board
+  end
+
+  def board= (board)
+    @board = board
   end
 
   def put_numbers
@@ -140,6 +158,7 @@ class Board
     end
     around
   end
+
 
   def render
     @board.each_with_index do | row, idx1 |
