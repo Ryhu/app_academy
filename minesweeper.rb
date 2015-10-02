@@ -3,17 +3,36 @@
 
 
 class Minesweeper
-  def initialize()
-
+  def initialize(boardX = 9,boardY = 9, bombs = 15)
+    @board = Board.new(boardX, boardY, bombs)
   end
 
-  def reveal
-
+  def reveal(pos)
+    @board[pos[0]][pos[1]].revealed = true
+    if @board[pos[0]][pos[1]].revealed
+      game_over
+    end
   end
 
-  def flag_bomb
-
+  def flag_bomb(pos)
+    @board[pos[0]][pos[1]].flagged = true
   end
+
+  def game_over
+    puts "Game Over"
+  end
+
+  def prompt_user
+    puts "Enter command"
+    puts "Reveal, Flag, Ping"
+    command = gets.chomp
+
+    puts "Enter position in ?,?"
+    pos = gets.chomp
+
+    reader(command,pos)
+  end
+
 
 end
 
@@ -47,7 +66,7 @@ end
 
 
 class Board
-  def initialize(boardX = 9,boardY = 9, bombs = 15)
+  def initialize(boardX, boardY, bombs)
     @board_size = [boardX,boardY]
     @boardX = boardX
     @boardY = boardY
