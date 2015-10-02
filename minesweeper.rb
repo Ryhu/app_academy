@@ -5,19 +5,33 @@
 class Minesweeper
   def initialize(boardX = 9,boardY = 9, bombs = 15)
     @board = Board.new(boardX, boardY, bombs)
+    @win_count
   end
 
   def reveal(pos)
     @board[pos[0]][pos[1]].revealed = true
-    if @board[pos[0]][pos[1]].revealed
-      game_over
-    end
     @board.render
+    if @board[pos[0]][pos[1]].value == 9
+      game_over
+    else
+      @win_count += 1
+      if win_check
+        return "YOU WINNNNNN"
+      else
+      prompt_user
+      end
+    end
+
+  end
+
+  def wincheck
+    win_count == boardX * boardY - bombs
   end
 
   def flag_bomb(pos)
     @board[pos[0]][pos[1]].flagged = true
     @board.render
+    prompt_user
   end
 
   def game_over
@@ -38,6 +52,13 @@ class Minesweeper
   def reader(command,pos)
     if command == "reveal"
       reveal(pos)
+    elsif command == "flag"
+      flag_bomb(pos)
+    elsif command == "ping"
+      ping(pos)
+    else
+      prompt_user
+      "learnt o type muffa"
   end
 
 end
