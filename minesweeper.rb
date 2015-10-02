@@ -2,7 +2,7 @@ require "byebug"
 class Minesweeper
   attr_reader :board
 
-  def initialize(boardX = 9,boardY = 9, bombs = 15)
+  def initialize(boardX = 15,boardY = 15, bombs = 15)
     @board = Board.new(boardX, boardY, bombs)
     @win_count = 0
   end
@@ -13,8 +13,8 @@ class Minesweeper
 
   def reveal(pos)
     @board[pos].revealed = true
-    @board.render
     if @board[pos].bombed?
+      @board.render
       game_over
     else
       @win_count += 1
@@ -24,6 +24,7 @@ class Minesweeper
       if @board[pos].value == 0
         zero_propegate(pos)
       else
+        @board.render
         prompt_user
       end
     end
@@ -34,11 +35,22 @@ class Minesweeper
     CONSTANTS.each do |el|
       if self.board.in_bounds?([el[0] + pos[0] , el[1] + pos[1]])
         unless @board[[el[0] + pos[0], el[1] + pos[1]]].revealed?
-          reveal(@board[[el[0] + pos[0], el[1] + pos[1]]].position)
+          spec_reveal(@board[[el[0] + pos[0], el[1] + pos[1]]].position)
         end
       end
     end
+    @board.render
+    prompt_user
   end
+
+  def spec_reveal(pos)
+    if @board[pos].value == 0
+      reveal(pos)
+    else
+      @board[pos].revealed = true
+    end
+  end
+
 
   def win_check
     @win_count == @board.boardX * @board.boardY - @board.bombs
@@ -73,9 +85,6 @@ class Minesweeper
       flag_bomb(pos)
     elsif command == "ping"
       ping(pos)
-    else
-      prompt_user
-      "learnt o type muffa"
     end
   end
 
