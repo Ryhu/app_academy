@@ -7,6 +7,10 @@ class Minesweeper
     @win_count = 0
   end
 
+  def run
+    prompt_user
+  end
+
   def reveal(pos)
     @board[pos].revealed = true
     @board.render
@@ -151,7 +155,11 @@ class Board
         making_board[idx1][idx2] = Tile.new([idx1,idx2], self)
       end
     end
-      making_board.flatten.sample(@bombs).each{|tile| tile.bombed = true}
+      making_board.flatten.sample(@bombs).each do |tile|
+        tile.bombed = true
+        tile.value = 9
+      end
+
       @board = making_board
   end
 
@@ -162,7 +170,7 @@ class Board
   def put_numbers
     @board.each_with_index do | row, idx1 |
       row.each_with_index do | col, idx2 |
-        if @board[idx1][idx2].value == 0
+        unless @board[idx1][idx2].bombed?
           @board[idx1][idx2].value = surroundings([idx1,idx2])
         end
       end
