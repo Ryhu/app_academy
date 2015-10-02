@@ -12,10 +12,12 @@ class Minesweeper
     if @board[pos[0]][pos[1]].revealed
       game_over
     end
+    @board.render
   end
 
   def flag_bomb(pos)
     @board[pos[0]][pos[1]].flagged = true
+    @board.render
   end
 
   def game_over
@@ -24,7 +26,7 @@ class Minesweeper
 
   def prompt_user
     puts "Enter command"
-    puts "Reveal, Flag, Ping"
+    puts "reveal, flag, ping"
     command = gets.chomp
 
     puts "Enter position in ?,?"
@@ -33,6 +35,10 @@ class Minesweeper
     reader(command,pos)
   end
 
+  def reader(command,pos)
+    if command == "reveal"
+      reveal(pos)
+  end
 
 end
 
@@ -47,7 +53,7 @@ class Tile
   def initialize(pos, board)
     @bombed = false
     @flagged = false
-    @revealed = false
+    @revealed = true
     @position = pos
     @value = 0
     tile_board = board
@@ -117,14 +123,17 @@ class Board
   def render
     @board.each_with_index do | row, idx1 |
       row.each_with_index do | col, idx2 |
-        if @board[idx1][idx2].revealed
-          if @board[idx1][idx2].value == 0
-            print '_'
+        if @board[idx1][idx2].flagged
+          print 'F'
+          if @board[idx1][idx2].revealed
+            if @board[idx1][idx2].value == 0
+              print '_'
+            else
+            print @board[idx1][idx2].value
+            end
           else
-          print @board[idx1][idx2].value
+            print '*'
           end
-        else
-          print '*'
         end
         print ' '
       end
