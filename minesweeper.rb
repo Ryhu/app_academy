@@ -26,8 +26,8 @@ class Tile
   #   @value =  value
   # end
 
-  def reveal
-
+  def revealed
+    @revealed
   end
 
   def neighbors(pos)
@@ -50,6 +50,7 @@ class Board
     @boardY = boardY
     @bombs = bombs
     @board = board_maker
+    put_numbers
 
   end
 
@@ -94,7 +95,11 @@ class Board
   def render
     @board.each_with_index do | row, idx1 |
       row.each_with_index do | col, idx2 |
-        print @board[idx1][idx2].value
+        if @board[idx1][idx2].revealed
+          print @board[idx1][idx2].value
+        else
+          print '?'
+        end
         print ' '
       end
       puts
